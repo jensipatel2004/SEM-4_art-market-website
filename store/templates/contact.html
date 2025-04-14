@@ -1,0 +1,206 @@
+{% load static %}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/contact.css' %}">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+        <script type="text/javascript">
+            var user = '{{request.user}}'
+
+            function getToken(name) {
+				var cookieValue = null;
+				if (document.cookie && document.cookie !== '') {
+					var cookies = document.cookie.split(';');
+					for (var i = 0; i < cookies.length; i++) {
+						var cookie = cookies[i].trim();
+						// Does this cookie string begin with the name we want?
+						if (cookie.substring(0, name.length + 1) === (name + '=')) {
+							cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+							break;
+						}
+					}
+				}
+				return cookieValue;
+			}
+			var csrftoken = getToken('csrftoken')
+	
+			function getCookie(name) {
+				// Split cookie string and get all individual name=value pairs in an array
+				var cookieArr = document.cookie.split(";");
+	
+				// Loop through the array elements
+				for(var i = 0; i < cookieArr.length; i++) {
+					var cookiePair = cookieArr[i].split("=");
+	
+					/* Removing whitespace at the beginning of the cookie name
+					and compare it with the given string */
+					if(name == cookiePair[0].trim()) {
+						// Decode the cookie value and return
+						return decodeURIComponent(cookiePair[1]);
+					}
+				}
+	
+				// Return null if not found
+				return null;
+			}
+			var cart = JSON.parse(getCookie('cart'))
+			if(cart == undefined){
+				cart = {}
+				console.log('Cart was created!')
+				document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
+			}
+			console.log('Cart:', cart)
+            
+    </script>
+    </head>
+    <body>
+        <ul class="nav justify-content-center" style="background-color: rgb(209, 153, 153); "> 
+            <img src="{% static 'images/4.jpg' %}" id="abc1" style=" margin-left: -405px">
+            <p id="abc2" style="margin-left: -10px">Artful Harbor</p>
+            <li class="nav-item "> 
+                <a id="q1" class="nav-link "  href="{% url 'art_FSD' %}" style="color: rgb(159, 9, 9); font-weight: bold; margin-left: -375px; margin-right: 60px;font-size: 15px">Home</a> 
+            </li> 
+            <li class="nav-item "> 
+                <a id="q2" class="nav-link "   href="{% url 'artist' %}" style="color: rgb(186, 41, 41); font-weight: bold; margin-left: -319px; margin-right: 50px;font-size: 15px">Artist</a> 
+            </li> 
+            <li class="nav-item "> 
+                <a id="q3" class="nav-link "   href="{% url 'artwork' %}" style="color: rgb(111, 33, 33); font-weight: bold; margin-left: -267px; margin-right: 50px;font-size: 15px">Artworks</a> 
+            </li> 
+
+            <li class="nav-item "> 
+                <a id="q4" class="nav-link "   href="{% url 'store' %}" style="color: rgba(198, 62, 62, 0.822); font-weight: bold; margin-left: -190px; margin-right: 30px;font-size: 15px">Store</a> 
+            </li> 
+            
+            <li class="nav-item  dropdown "> 
+                <a id="q5" class="nav-link active dropdown-toggle"  data-bs-toggle="dropdown"  href="#Events" style="color: #a94249; font-weight: bold; margin-left: -140px; margin-right: 30px;font-size: 15px">Events</a> 
+                <ul class="dropdown-menu"> 
+                    <li>
+                        <a class="dropdown-item"  href="{% url 'pastEvent' %}">past</a>
+                    </li> 
+                    <li>
+                        <a class="dropdown-item"  href="{% url 'currentEvent' %}">current</a>
+                    </li> 
+                    <li>
+                        <a class="dropdown-item"  href="{% url 'upcomingEvent' %}">upcoming</a>
+                    </li> 
+                </ul>
+            </li> 
+            <li class="nav-item "> 
+                <a id="q6" class="nav-link "  href="{% url 'contact' %}" style="color: rgb(111, 55, 55); font-weight: bold; margin-left: -70px; margin-right: 20px;font-size: 15px">Contact</a> 
+            </li> 
+
+            <li class="form-inline my-2 my-lg-0">
+                {% if user.is_authenticated %}
+                    <h5 style="margin-top: 4px; margin-right: -250px; margin-left: 130px; font-weight: bold; color: rgb(103, 63, 63);"><img id="v98"  src="{% static 'images/profile.webp' %}" /> {{ user.username }}</h5>
+                    <a href="{% url 'logout' %}"class="btn " style="margin-top: -28px; margin-right: -310px; margin-left: 230px; background-color: rgb(103, 63, 63); font-weight: bold; color: white;">Logout</a>
+                    <a href="{% url 'cart' %}">
+                        <img  id="cart-icon1" src="{% static 'images/cart.png' %}">
+                    </a>
+                   
+                   <p id="cart-total1" >{{cartItems}}</p>
+                {% else %}
+                <a href="{% url 'login' %}"class="btn " style="margin-top: 4px; margin-right: -270px; margin-left: 170px; font-weight: bold; color: white; background-color: rgb(103, 63, 63);">Login</a>
+                <a href="{% url 'signup' %}"class="btn " style="margin-top: 4px; margin-right: -350px; margin-left: 280px; background-color: rgb(137, 90, 90); font-weight: bold; color: white;">Signup</a>
+                <a href="{% url 'cart' %}">
+                    <img  id="cart-icon" src="{% static 'images/cart.png' %}">
+                </a>
+               
+               <p id="cart-total" >{{cartItems}}</p>
+                {% endif %}
+                
+            </li>
+        </ul>
+
+        <br>
+        <div class="container-fluid" style="height: 70%; width: 100%; position: relative; ">
+            <div style="background-color: #455b76; height: 80%; width: 100%; float: left;">
+            <img src="{% static 'images/41.avif' %}" style="height: 100%; width: 55%; border-radius: 50% 0 0 50%;margin-left: 45%;"></div>
+            <h1 id="v1" style="font-size: 50px;"> Get In Touch </h1>
+            <p id="v2" style="font-size: 16px;"> We're friendly and available to chat. Reach out to us anytime  </p>
+            <p id="v3" style="font-size: 16px;">  and we'll happily answer your questions. </p>
+        </div>    
+        <div class="container">
+        <h2 class="display-1" style="text-align: center; font-size: 50px; top: 0%; font-weight: bold;">Get in touch</h2>
+        <p style="text-align: center; font-size: 20px; margin-top: 0%; ">Let's talk about your project</p>
+        </div>
+        
+            <form  >
+            
+                
+                <table style="border: 10px double brown;"  width="50%" cellspacing="5" cellpadding="10" align="Center" rules="all">
+                <tr align="left">
+                <th style="color: blue;">Your Name :-</th>
+                <td><input type="text" placeholder="Enter Your Name" style="border-radius: 20px; border: 4px solid rgb(84, 182, 224);"/> </td>
+                
+                    </tr>
+                    
+                    <tr align="left">
+                        <th style="color: green">Contact Number :-</th>
+                        <td><input type="text" placeholder="Enter Your Phone No." style="border-radius: 20px; border: 4px solid rgb(123, 10, 87);" /> </td>
+                        
+                            </tr>
+                        
+                    <tr align="left">
+                    <th style="color: blue;">Email Id :-</th>
+                    <td><input type="email" placeholder="Enter Your Email id" style="border-radius: 20px; border: 4px solid rgb(84, 182, 224);"/> </td>
+                    
+                    </tr>
+                    <tr align="left">
+                        <th style="color: green">Your Message :-</th>
+                        <td><textarea rows="8" cols="15" placeholder="Enter Your Message" style="border-radius: 20px; border: 4px solid red; border: 4px solid rgb(123, 10, 87);"></textarea> </td>
+                        
+                        </tr>
+                    
+                        </table>
+                        
+                        </form>
+                        <div align="center">
+                        <button type="button" style="background: linear-gradient(0deg, rgb(123, 10, 87), rgb(174, 54, 168), rgb(84, 182, 224), rgb(51, 129, 181)); color: white; height: 50px; width: 150px; font-size: 20px; border-radius: 20px; font-weight:bold; " >Submit</button>
+                        <button type="button" style="background: linear-gradient(0deg, rgb(123, 10, 87), rgb(54, 174, 120), rgb(171, 183, 58), rgb(51, 129, 181)); color: white; height: 50px; width: 150px; font-size: 20px; border-radius: 20px; font-weight:bold; ">Reset</button>
+                        </div>
+                        <br>
+                        <br>
+                        <br> 
+                            <div  class="container-fluid" >
+                                <div id="d1" style="height: 70%;">
+                                    <div class="row">
+                                        <div class="col-4" style="float: left;">
+                                            <h1 id="d2" >Contact us</h1>
+                                            <br>
+                                            <ul>
+                                                <li id="d3" style="font-size: 13px;">Address:- 203A,sky Residency,Ahmedabad</li>
+                                                <br>
+                                                <li id="d4" >Email:- Email:- hensi2008@gmail.com</li>
+                                                <br>
+                                                <li id="d5" >Phone no.:- (+91)2345671564</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-4" style="float: left;">
+                                            <br>
+                                            <h4 id="d6" >Types of painting</h4>
+                                            <ul>
+                                                <br>
+                                                <li id="d7" >Acrylic painting</li>
+                                                <li id="d8" >Mandala art</li>
+                                                <li id="d9" >Tavdi art</li>
+                                                <li id="d10" >Abstract painting</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-4" style="float: left;">
+                                            <br>
+                                            <h4 id="d11" >Events</h4>
+                                            <ul>
+                                                <br>
+                                                <li id="d12" >Past</li>
+                                                <li id="d13" >Current</li>
+                                                <li id="d14" >Upcoming</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                            </div> 
+                            <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+    </body>
+</html>

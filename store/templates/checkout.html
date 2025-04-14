@@ -1,0 +1,290 @@
+
+
+{% load static %}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/checkout.css' %}">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+        <script type="text/javascript">
+            var user = '{{request.user}}'
+
+            function getToken(name) {
+				var cookieValue = null;
+				if (document.cookie && document.cookie !== '') {
+					var cookies = document.cookie.split(';');
+					for (var i = 0; i < cookies.length; i++) {
+						var cookie = cookies[i].trim();
+						// Does this cookie string begin with the name we want?
+						if (cookie.substring(0, name.length + 1) === (name + '=')) {
+							cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+							break;
+						}
+					}
+				}
+				return cookieValue;
+			}
+			var csrftoken = getToken('csrftoken')
+	
+			function getCookie(name) {
+				// Split cookie string and get all individual name=value pairs in an array
+				var cookieArr = document.cookie.split(";");
+	
+				// Loop through the array elements
+				for(var i = 0; i < cookieArr.length; i++) {
+					var cookiePair = cookieArr[i].split("=");
+	
+					/* Removing whitespace at the beginning of the cookie name
+					and compare it with the given string */
+					if(name == cookiePair[0].trim()) {
+						// Decode the cookie value and return
+						return decodeURIComponent(cookiePair[1]);
+					}
+				}
+	
+				// Return null if not found
+				return null;
+			}
+			var cart = JSON.parse(getCookie('cart'))
+			if(cart == undefined){
+				cart = {}
+				console.log('Cart was created!')
+				document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
+			}
+			console.log('Cart:', cart)
+		
+            
+    </script>
+    </head>
+    
+
+    <body>
+        <ul class="nav justify-content-center" style="background-color: rgb(209, 153, 153); "> 
+            <img src="{% static 'images/4.jpg' %}" id="abc1" style=" margin-left: -405px">
+            <p id="abc2" style="margin-left: -10px">Artful Harbor</p>
+            <li class="nav-item "> 
+                <a id="q1" class="nav-link "  href="{% url 'art_FSD' %}" style="color: rgb(159, 9, 9); font-weight: bold; margin-left: -375px; margin-right: 60px;font-size: 15px">Home</a> 
+            </li> 
+            <li class="nav-item "> 
+                <a id="q2" class="nav-link "   href="{% url 'artist' %}" style="color: rgb(186, 41, 41); font-weight: bold; margin-left: -319px; margin-right: 50px;font-size: 15px">Artist</a> 
+            </li> 
+            <li class="nav-item "> 
+                <a id="q3" class="nav-link "   href="{% url 'artwork' %}" style="color: rgb(111, 33, 33); font-weight: bold; margin-left: -267px; margin-right: 50px;font-size: 15px">Artworks</a> 
+            </li> 
+            <li class="nav-item "> 
+                <a id="q4" class="nav-link "   href="{% url 'store' %}" style="color: rgba(198, 62, 62, 0.822); font-weight: bold; margin-left: -190px; margin-right: 30px;font-size: 15px">Store</a> 
+            </li> 
+            
+            <li class="nav-item  dropdown "> 
+                <a id="q5" class="nav-link active dropdown-toggle"  data-bs-toggle="dropdown"  href="#Events" style="color: #a94249; font-weight: bold; margin-left: -140px; margin-right: 30px;font-size: 15px">Events</a> 
+                <ul class="dropdown-menu"> 
+                    <li>
+                        <a class="dropdown-item"  href="{% url 'pastEvent' %}">past</a>
+                    </li> 
+                    <li>
+                        <a class="dropdown-item"  href="{% url 'currentEvent' %}">current</a>
+                    </li> 
+                    <li>
+                        <a class="dropdown-item"  href="{% url 'upcomingEvent' %}">upcoming</a>
+                    </li> 
+                </ul>
+            </li> 
+            <li class="nav-item "> 
+                <a id="q6" class="nav-link "  href="{% url 'contact' %}" style="color: rgb(111, 55, 55); font-weight: bold; margin-left: -70px; margin-right: 20px;font-size: 15px">Contact</a> 
+            </li> 
+
+            <li class="form-inline my-2 my-lg-0">
+                {% if user.is_authenticated %}
+                    <h5 style="margin-top: 4px; margin-right: -250px; margin-left: 130px; font-weight: bold; color: rgb(103, 63, 63);"><img id="v98"  src="{% static 'images/profile.webp' %}" /> {{ user.username }}</h5>
+                    <a href="{% url 'logout' %}"class="btn " style="margin-top: -28px; margin-right: -310px; margin-left: 230px; background-color: rgb(103, 63, 63); font-weight: bold; color: white;">Logout</a>
+                    <a href="{% url 'cart' %}">
+                        <img  id="cart-icon1" src="{% static 'images/cart.png' %}">
+                    </a>
+                   
+                   <p id="cart-total1" >{{cartItems}}</p>
+                {% else %}
+                <a href="{% url 'login' %}"class="btn " style="margin-top: 4px; margin-right: -270px; margin-left: 170px; font-weight: bold; color: white; background-color: rgb(103, 63, 63);">Login</a>
+                <a href="{% url 'signup' %}"class="btn " style="margin-top: 4px; margin-right: -350px; margin-left: 280px; background-color: rgb(137, 90, 90); font-weight: bold; color: white;">Signup</a>
+                <a href="{% url 'cart' %}">
+                    <img  id="cart-icon" src="{% static 'images/cart.png' %}">
+                </a>
+               
+               <p id="cart-total" >{{cartItems}}</p>
+                {% endif %}
+                
+   
+            </li>
+        </ul>
+
+        <br>
+        <div class="row" style="padding: 40px;">
+			<div class="col-lg-6">
+				<div class="box-element" id="form-wrapper">
+					<form id="form">
+						{% csrf_token %}
+						<div id="user-info">
+							<div class="form-field">
+								<input required class="form-control" type="text" name="name" placeholder="Name..">
+							</div>
+							<div class="form-field">
+								<input required class="form-control" type="email" name="email" placeholder="Email..">
+							</div>
+						</div>
+						
+						<div id="shipping-info">
+							<hr>
+							<p>Shipping Information:</p>
+							<hr>
+							<div class="form-field">
+								<input class="form-control" type="text" name="address" placeholder="Address..">
+							</div>
+							<div class="form-field">
+								<input class="form-control" type="text" name="city" placeholder="City..">
+							</div>
+							<div class="form-field">
+								<input class="form-control" type="text" name="state" placeholder="State..">
+							</div>
+							<div class="form-field">
+								<input class="form-control" type="text" name="zipcode" placeholder="Zip code..">
+							</div>
+							<div class="form-field">
+								<input class="form-control" type="text" name="country" placeholder="Zip code..">
+							</div>
+						</div>
+	
+						<hr>
+						<input id="form-button" class="btn btn-success btn-block" type="submit" value="Continue">
+					</form>
+				</div>
+	
+				<br>
+				<div class="box-element hidden" id="payment-info">
+					<small>Paypal Options</small>
+					
+					<button id="make-payment">Make Payment</button>
+				</div>
+				<br>
+				<br>
+			</div>
+			
+	
+			<div class="col-lg-6">
+				<div class="box-element">
+					<a  class="btn btn-outline-dark" href="{% url 'cart' %}">&#x2190; Back to Cart</a>
+					<hr>
+					<h3>Order Summary</h3>
+					<hr>
+					{% for item in items %}
+					<div class="cart-row">
+						<div style="flex:2"><img class="row-image" src="{{item.product.imageURL}}"></div>
+						<div style="flex:2"><p>{{item.product.name}}</p></div>
+						<div style="flex:1"><p>₹{{item.product.price|floatformat:2}}</p></div>
+						<div style="flex:1"><p>x{{item.quantity}}</p></div>
+					</div>
+					{% endfor %}
+					<h5>Items:   {{order.get_cart_items}}</h5>
+					<h5>Total:   ₹{{order.get_cart_total|floatformat:2}}</h5>
+				</div>
+				<br>
+				<br>
+			</div>
+		</div>
+		
+	<script type="text/javascript">
+		var shipping = '{{order.shipping}}' 
+		var total = '{{order.get_cart_total}}'
+	
+		if(shipping == 'False'){
+			document.getElementById('shipping-info').innerHTML = ''
+		}
+	
+		if (user != 'AnonymousUser'){
+			document.getElementById('user-info').innerHTML = ''
+		}
+	
+		   if (shipping == 'False' && user != 'AnonymousUser'){
+			   //Hide entire form if user is logged in and shipping is false
+				   document.getElementById('form-wrapper').classList.add("hidden");
+				   //Show payment if logged in user wants to buy an item that does not require shipping
+				   document.getElementById('payment-info').classList.remove("hidden");
+		   	}
+	
+		var form = document.getElementById('form')
+	
+		var csrftoken = form.getElementsByTagName("input")[0].value
+		console.log('Newtoken:', form.getElementsByTagName("input")[0].value)
+	
+		form.addEventListener('submit', function(e){
+			e.preventDefault()
+			console.log('Form Submitted...')
+			document.getElementById('form-button').classList.add("hidden");
+			document.getElementById('payment-info').classList.remove("hidden");
+		})
+	
+		document.getElementById('make-payment').addEventListener('click', function(e){
+			submitFormData()
+		}) 
+	
+		function submitFormData(){
+			console.log('Payment button clicked')
+	
+			var userFormData = {
+				'name':null,
+				'email':null,
+				'total':total,
+			}
+	
+			var shippingInfo = {
+				'address':null,
+				'city':null,
+				'state':null,
+				'zipcode':null,
+			}
+	
+			if(shipping != 'False'){
+				shippingInfo.address = form.address.value
+				shippingInfo.city = form.city.value
+				shippingInfo.state = form.state.value
+				shippingInfo.zipcode = form.zipcode.value
+			}
+	
+			if(user == 'AnonymousUser'){
+				userFormData.name = form.name.value
+				userFormData.email = form.email.value
+			}
+	
+			console.log('Shipping Info:',shippingInfo)
+			console.log('User info:', userFormData)
+	
+			var url = "/process_order/"
+			fetch(url, {
+				method:'POST',
+				headers:{
+					'Content-Type':'applicaiton/json',
+					'X-CSRFToken':csrftoken,
+				}, 
+				body:JSON.stringify({'form':userFormData, 'shipping':shippingInfo}),
+					
+			})
+			.then((response) => response.json())
+			.then((data) => {
+				console.log('Success:', data);
+				alert('Transaction completed');  
+	
+				cart = {}
+				document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
+	
+				window.location.href = "{% url 'store' %}"
+	
+			})
+			
+		}
+	</script>
+        
+        <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>       
+    </body>
+</html>
+    

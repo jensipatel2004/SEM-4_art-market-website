@@ -1,0 +1,218 @@
+{% load static %}
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/signup.css' %}">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+        <script type="text/javascript">
+            var user = '{{request.user}}'
+
+            function getToken(name) {
+				var cookieValue = null;
+				if (document.cookie && document.cookie !== '') {
+					var cookies = document.cookie.split(';');
+					for (var i = 0; i < cookies.length; i++) {
+						var cookie = cookies[i].trim();
+						// Does this cookie string begin with the name we want?
+						if (cookie.substring(0, name.length + 1) === (name + '=')) {
+							cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+							break;
+						}
+					}
+				}
+				return cookieValue;
+			}
+			var csrftoken = getToken('csrftoken')
+	
+			function getCookie(name) {
+				// Split cookie string and get all individual name=value pairs in an array
+				var cookieArr = document.cookie.split(";");
+	
+				// Loop through the array elements
+				for(var i = 0; i < cookieArr.length; i++) {
+					var cookiePair = cookieArr[i].split("=");
+	
+					/* Removing whitespace at the beginning of the cookie name
+					and compare it with the given string */
+					if(name == cookiePair[0].trim()) {
+						// Decode the cookie value and return
+						return decodeURIComponent(cookiePair[1]);
+					}
+				}
+	
+				// Return null if not found
+				return null;
+			}
+			var cart = JSON.parse(getCookie('cart'))
+			if(cart == undefined){
+				cart = {}
+				console.log('Cart was created!')
+				document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
+			}
+			console.log('Cart:', cart)
+            
+    </script>
+    </head>
+    <body  >
+        <ul class="nav justify-content-center" style="background-color: rgb(209, 153, 153); "> 
+            <img src="{% static 'images/4.jpg' %}" id="abc1" style=" margin-left: -405px">
+            <p id="abc2" style="margin-left: -10px">Artful Harbor</p>
+            <li class="nav-item "> 
+                <a id="q1" class="nav-link "  href="{% url 'art_FSD' %}" style="color: rgb(159, 9, 9); font-weight: bold; margin-left: -375px; margin-right: 60px;font-size: 15px">Home</a> 
+            </li> 
+            <li class="nav-item "> 
+                <a id="q2" class="nav-link "   href="{% url 'artist' %}" style="color: rgb(186, 41, 41); font-weight: bold; margin-left: -319px; margin-right: 50px;font-size: 15px">Artist</a> 
+            </li> 
+            <li class="nav-item "> 
+                <a id="q3" class="nav-link "   href="{% url 'artwork' %}" style="color: rgb(111, 33, 33); font-weight: bold; margin-left: -267px; margin-right: 50px;font-size: 15px">Artworks</a> 
+            </li> 
+            <li class="nav-item "> 
+                <a id="q4" class="nav-link "   href="{% url 'store' %}" style="color: rgba(198, 62, 62, 0.822); font-weight: bold; margin-left: -190px; margin-right: 30px;font-size: 15px">Store</a> 
+            </li> 
+            
+            <li class="nav-item  dropdown "> 
+                <a id="q5" class="nav-link active dropdown-toggle"  data-bs-toggle="dropdown"  href="#Events" style="color: #a94249; font-weight: bold; margin-left: -140px; margin-right: 30px;font-size: 15px">Events</a> 
+                <ul class="dropdown-menu"> 
+                    <li>
+                        <a class="dropdown-item"  href="{% url 'pastEvent' %}">past</a>
+                    </li> 
+                    <li>
+                        <a class="dropdown-item"  href="{% url 'currentEvent' %}">current</a>
+                    </li> 
+                    <li>
+                        <a class="dropdown-item"  href="{% url 'upcomingEvent' %}">upcoming</a>
+                    </li> 
+                </ul>
+            </li> 
+            <li class="nav-item "> 
+                <a id="q6" class="nav-link "  href="{% url 'contact' %}" style="color: rgb(111, 55, 55); font-weight: bold; margin-left: -70px; margin-right: 20px;font-size: 15px">Contact</a> 
+            </li> 
+
+            <li class="form-inline my-2 my-lg-0">
+                {% if user.is_authenticated %}
+                    <h5 style="margin-top: 4px; margin-right: -250px; margin-left: 130px; font-weight: bold; color: rgb(103, 63, 63);"><img id="v98"  src="{% static 'images/profile.webp' %}" /> {{ user.username }}</h5>
+                    <a href="{% url 'logout' %}"class="btn " style="margin-top: -28px; margin-right: -310px; margin-left: 230px; background-color: rgb(103, 63, 63); font-weight: bold; color: white;">Logout</a>
+                    <a href="{% url 'cart' %}">
+                        <img  id="cart-icon1" src="{% static 'images/cart.png' %}">
+                    </a>
+                   
+                   <p id="cart-total1" >{{cartItems}}</p>
+                {% else %}
+                <a href="{% url 'login' %}"class="btn " style="margin-top: 4px; margin-right: -270px; margin-left: 170px; font-weight: bold; color: white; background-color: rgb(103, 63, 63);">Login</a>
+                <a href="{% url 'signup' %}"class="btn " style="margin-top: 4px; margin-right: -350px; margin-left: 280px; background-color: rgb(137, 90, 90); font-weight: bold; color: white;">Signup</a>
+                <a href="{% url 'cart' %}">
+                    <img  id="cart-icon" src="{% static 'images/cart.png' %}">
+                </a>
+               
+               <p id="cart-total" >{{cartItems}}</p>
+                {% endif %}
+                
+            </li>
+        </ul>
+
+        <br>
+        
+
+<div class="row" style="padding: 250px; margin-top: -230px; ">
+    <div class="container" style="box-shadow: rgba(0, 0, 0, 0.60) 0px 10px 20px; margin-top: 10px; margin-left: 15px; margin-right: 10px;">
+    
+
+    <div class="col-lg-12" style="padding: 20px; ">
+        <form method="POST" action="">
+            {% csrf_token %}
+            <h4 className='signup-title text-center py-2 mb-2' style="border-bottom: 3px solid rgb(38, 139, 193); font-weight: 100%; color: rgb(53, 158, 199); text-align: center;">Sign Up</h4>
+            <div className='form-floating mb-3'>
+                <br>
+            {{form.username.label}}
+            <br>
+            {{form.username}}
+            <br>
+        </div>
+        <div className='form-floating mb-3'>
+            <br>
+            {{form.email.label}}
+            <br>
+            {{form.email}}
+            <br>
+        </div>
+            <div className='form-floating mb-3'>
+                <br>
+            {{form.password1.label}}
+            <br>
+            {{form.password1}}
+            <br>
+        </div>
+            <div className='form-floating mb-3'>
+                <br>
+            {{form.password2.label}}
+            <br>
+            {{form.password2}}
+            <br>
+        </div>
+        
+        <div className='text-center'>
+            <br>
+            
+            <input type="submit" name="submit" value="Sign Up" style="border: none; background: linear-gradient(0deg, blue, rgb(78, 95, 210), rgb(66, 168, 232), rgb(106, 192, 245)); color: white; font-weight: bold; width: 100%; font-size: 1.2rem; border-radius: 20px; padding: 10px;"/>
+        </div>
+    
+        <div className='text-center mt-3'>
+            <br>
+            Already have an account? <a href="{% url 'login' %}">Login</a>
+        </div>
+    </form> 
+
+            {% comment %} <h4 className='signup-title text-center py-2 mb-2' style="border-bottom: 3px solid rgb(38, 139, 193); font-weight: 100%; color: rgb(53, 158, 199); text-align: center;">Sign Up</h4>
+            <div className='form-floating mb-3'>
+                <br>
+                <label htmlFor='username'>Username :</label>
+                <br>
+                <input type='text' className='form-control' id='username' placeholder='Enter username' name="username"  />
+                
+            </div>
+            
+            <div className='form-floating mb-3'>
+                <br>
+                <label htmlFor='password'>Password :</label>
+                <br>
+                <input type='password' className='form-control' id='password' placeholder='Enter password' name="password" />
+                
+            </div>
+            <div className='form-floating mb-3'>
+                <br>
+                <label htmlFor='confirmpassword'>Confirm Password :</label>
+                <br>
+                <input type='password' className='form-control' id='confirmpassword' placeholder='ReEnter your password' name="confirmpassword" />
+                
+            </div>
+            <div className='text-center'>
+                <br>
+                <button className='signup-btn py-3 rounded-3' style="border: none; background: linear-gradient(0deg, blue, rgb(78, 95, 210), rgb(66, 168, 232), rgb(106, 192, 245)); color: white; font-weight: bold; width: 100%; font-size: 1.2rem; border-radius: 20px; padding: 10px;"> Sign Up </button>
+            </div>
+            <div className='text-center mt-3'>
+                <br>
+                Already have an account? <a href="{% url 'login' %}">Login</a>
+            </div>
+        </form> {% endcomment %}
+        {% comment %} <input type="submit" name="submit" value="submit" />
+        <br> {% endcomment %}
+        
+    </div>
+</div>
+</div>
+
+  <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+
+
+        <br>
+    </body>
+</html>
+
+  <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+        <br>
+    </body>
+</html>

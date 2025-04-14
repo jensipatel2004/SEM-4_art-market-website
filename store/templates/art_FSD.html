@@ -1,0 +1,538 @@
+<!-- 
+  Title- Artful Harbor Website
+  Name-Patel Jensi Hareshkumar
+  Roll No-115
+  Enrollment No- 22002170210072
+  Subject-FSD
+ -->
+ {% load static %}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/art_FSD.css' %}">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+        <script type="text/javascript">
+            var user = '{{request.user}}'
+
+            function getToken(name) {
+				var cookieValue = null;
+				if (document.cookie && document.cookie !== '') {
+					var cookies = document.cookie.split(';');
+					for (var i = 0; i < cookies.length; i++) {
+						var cookie = cookies[i].trim();
+						// Does this cookie string begin with the name we want?
+						if (cookie.substring(0, name.length + 1) === (name + '=')) {
+							cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+							break;
+						}
+					}
+				}
+				return cookieValue;
+			}
+			var csrftoken = getToken('csrftoken')
+	
+			function getCookie(name) {
+				// Split cookie string and get all individual name=value pairs in an array
+				var cookieArr = document.cookie.split(";");
+	
+				// Loop through the array elements
+				for(var i = 0; i < cookieArr.length; i++) {
+					var cookiePair = cookieArr[i].split("=");
+	
+					/* Removing whitespace at the beginning of the cookie name
+					and compare it with the given string */
+					if(name == cookiePair[0].trim()) {
+						// Decode the cookie value and return
+						return decodeURIComponent(cookiePair[1]);
+					}
+				}
+	
+				// Return null if not found
+				return null;
+			}
+			var cart = JSON.parse(getCookie('cart'))
+			if(cart == undefined){
+				cart = {}
+				console.log('Cart was created!')
+				document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
+			}
+			console.log('Cart:', cart)
+		
+            
+    </script>
+    </head>
+    
+        
+    <body>
+        
+        <ul class="nav justify-content-center" style="background-color: rgb(209, 153, 153); "> 
+            <img src="{% static 'images/4.jpg' %}" id="abc1" style=" margin-left: -405px">
+            <p id="abc2" style="margin-left: -10px">Artful Harbor</p>
+            <li class="nav-item "> 
+                <a id="q1" class="nav-link "  href="{% url 'art_FSD' %}" style="color: rgb(159, 9, 9); font-weight: bold; margin-left: -375px; margin-right: 60px; font-size: 15px">Home</a> 
+            </li> 
+            <li class="nav-item "> 
+                <a id="q2" class="nav-link "   href="{% url 'artist' %}" style="color: rgb(186, 41, 41); font-weight: bold; margin-left: -319px; margin-right: 50px; font-size: 15px">Artist</a> 
+            </li> 
+            <li class="nav-item "> 
+                <a id="q3" class="nav-link "   href="{% url 'artwork' %}" style="color: rgb(111, 33, 33); font-weight: bold; margin-left: -267px; margin-right: 50px; font-size: 15px">Artworks</a> 
+            </li> 
+            <li class="nav-item "> 
+                <a id="q4" class="nav-link "   href="{% url 'store' %}" style="color: rgba(198, 62, 62, 0.822); font-weight: bold; margin-left: -190px; margin-right: 30px;font-size: 15px">Store</a> 
+            </li> 
+            
+            <li class="nav-item  dropdown "> 
+                <a id="q5" class="nav-link active dropdown-toggle"  data-bs-toggle="dropdown"  href="#Events" style="color: #a94249; font-weight: bold; margin-left: -140px; margin-right: 30px;font-size: 15px">Events</a> 
+                <ul class="dropdown-menu"> 
+                    <li>
+                        <a class="dropdown-item"  href="{% url 'pastEvent' %}">past</a>
+                    </li> 
+                    <li>
+                        <a class="dropdown-item"  href="{% url 'currentEvent' %}">current</a>
+                    </li> 
+                    <li>
+                        <a class="dropdown-item"  href="{% url 'upcomingEvent' %}">upcoming</a>
+                    </li> 
+                </ul>
+            </li> 
+            <li class="nav-item "> 
+                <a id="q6" class="nav-link "  href="{% url 'contact' %}" style="color: rgb(111, 55, 55); font-weight: bold; margin-left: -70px; margin-right: 20px; font-size: 15px">Contact</a> 
+            </li> 
+
+            <li class="form-inline my-2 my-lg-0">
+                {% if user.is_authenticated %}
+                    <h5 style="margin-top: 4px; margin-right: -250px; margin-left: 130px; font-weight: bold; color: rgb(103, 63, 63);"><img id="v98"  src="{% static 'images/profile.webp' %}" /> {{ user.username }}</h5>
+                    <a href="{% url 'logout' %}"class="btn " style="margin-top: -28px; margin-right: -310px; margin-left: 230px; background-color: rgb(103, 63, 63); font-weight: bold; color: white;">Logout</a>
+                    <a href="{% url 'cart' %}">
+                        <img  id="cart-icon1" src="{% static 'images/cart.png' %}">
+                    </a>
+                   
+                   <p id="cart-total1" >{{cartItems}}</p>
+                {% else %}
+                <a href="{% url 'login' %}"class="btn " style="margin-top: 4px; margin-right: -270px; margin-left: 170px; font-weight: bold; color: white; background-color: rgb(103, 63, 63);">Login</a>
+                <a href="{% url 'signup' %}"class="btn " style="margin-top: 4px; margin-right: -350px; margin-left: 280px; background-color: rgb(137, 90, 90); font-weight: bold; color: white;">Signup</a>
+                <a href="{% url 'cart' %}">
+                    <img  id="cart-icon" src="{% static 'images/cart.png' %}">
+                </a>
+               
+               <p id="cart-total" >{{cartItems}}</p>
+                {% endif %}
+
+                
+                
+   
+            </li>
+        </ul>
+
+
+
+    {% comment %} <div class="tab-content"> 
+        <div class="tab-pane container" id="Home"> {% endcomment %}
+            <br>
+            <div id="v7" class="container-fluid" >
+            <div id="v8" >
+            <div  class="row" >
+                <div  class="col-8">
+                    <img id="v9" src="{% static 'images/5.webp' %}" />
+                </div>
+                <div class="col-4" >
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <p id="v10" >Welcome To</p>
+                    <p id="v11" >Artful Harbor</p>
+                    <p id="v12" > Website</p>
+                    <p id="v13" >We are deliver best paintings</p>
+                </div>
+            </div>
+            </div>
+            </div>
+           
+            <br>
+            
+            <h1 style="font-weight: bold; color: black; text-align: center;"> Famous Artist  </h1>
+            <br>
+            <div class="row">
+                <div class="ha col-3 ">
+                    <img  class="a1"  src="{% static 'images/6.png' %}" />
+                    <div class="a">Leonardo da Vinci (1452 – 1519)</div>
+                </div>
+                <div class="hb col-3 ">
+                    <img class="bi"  src="{% static 'images/7.jpg' %}"/>
+                    <div class="b">Rembrandt (1606 – 1669)</div>
+                </div>
+                <div class="hc col-3 ">
+                    <img class="ci"  src="{% static 'images/8.png' %}"/>
+                    <div class="c">Élisabeth Louise Vigée Le Brun (1755 – 1842)</div>
+                </div>
+                <div class="hd col-3 ">
+                    <img class="d1"  src="{% static 'images/9.png' %}"/>
+                    <div class="d">Eugène Delacroix (1798–1863)</div>
+                </div>
+            </div>
+            
+            <br>
+        
+            <br>
+            <h1 style="font-weight: bold; color: black;text-align: center;"> All time Famous Artworks  </h1>
+            <br>
+            <div class="container">
+                <!-- Carousel -->
+                <div id="demo" class="carousel slide" data-bs-ride="carousel">
+                <!-- Indicators/dots -->
+                <div class="carousel-indicators">
+                <button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>
+                <button type="button" data-bs-target="#demo" data-bs-slide-to="1" ></button>
+                <button type="button" data-bs-target="#demo" data-bs-slide-to="2" ></button>
+                <button type="button" data-bs-target="#demo" data-bs-slide-to="3" ></button>
+                <button type="button" data-bs-target="#demo" data-bs-slide-to="4" ></button>
+                </div>
+                <div class="carousel-inner"> 
+                    <div class="carousel-item active">
+                    <img src="{% static 'images/10.jpg' %}"  class="d-block w-100" style="height: 500px;">
+                    <div class="carousel-caption bg-dark"> 
+                        <h3> The Mona Lisa</h3> 
+                    </div>
+                    </div>
+                    <div class="carousel-item">
+                    <img src="{% static 'images/11.jpg' %}" alt="Chicago" class="d-block w-100" style="height: 500px;">
+                    <div class="carousel-caption bg-dark"> 
+                        <h3>Starry Night</h3> 
+                    </div>
+                    </div>
+                    <div class="carousel-item">
+                    <img src="{% static 'images/12.jpg' %}" alt="New York" class="d-block w-100" style="height: 500px;">
+                    <div class="carousel-caption bg-dark"> 
+                        <h3>The Scream</h3> 
+                    </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://sep.turbifycdn.com/ty/cdn/madisonartshop/Picasso-3musicians?t=1678352599&" alt="Chicago" class="d-block w-100" style="height: 500px;">
+                        <div class="carousel-caption bg-dark"> 
+                            <h3> Three Musicians</h3> 
+                        </div>
+                        </div>
+                        <div class="carousel-item">
+                            <img src="{% static 'images/13.jpg' %}" alt="Chicago" class="d-block w-100" style="height: 500px;">
+                            <div class="carousel-caption bg-dark" style="width: 75%;"> 
+                                <h4> A Sunday Afternoon on the Island of La Grande Jatte</h4> 
+                            </div>
+                            </div>
+                    </div>
+                    <!-- Left and right controls/icons -->
+                    <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev"> <span class="carousel-control-prev-icon"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next"> <span class="carousel-control-next-icon"></span>
+                    </button>
+                    </div>
+                    </div>
+                    <br>
+            <br>
+            <h1 style="font-weight: bold; color: black; text-align: center; font-size: 45px"> Sell Painting  </h1>
+            
+            <h3 style="font-weight: 20px; color: black;text-align: center; margin-top:10px; margin-bottom: -10px;"> Acrylic painting  </h2>
+            <br>
+                    
+
+                    <div class="row" style="padding: 20px;">
+                        <div class="sm1 col-sm-4" style="box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); gap: 8px; margin: 5px; width: 32%; border-radius:20px; border: 2px solid black">
+                            <img class="thumbnail" style="width:304; height:280; padding: 20px;" src="{% static 'images/14.jpg' %}">
+                            <div class="box-element product">
+                                <h4 style="text-align: center; color: #228168;"><strong >The King : Lion</strong></h4>
+                                <hr>
+                
+                                <button  style="color: white; background-color: #228168;  width: 130px; height: 30px;"><b>Add to Cart</b></button>
+                                
+                                <h6 style="display: inline-block; float: right"><strong>₹2,00,316</strong></h6>
+                
+                            </div>
+                        </div>
+                
+                        <div class="col-sm-4" style="box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); gap: 8px; margin: 5px; width: 32%; border-radius:20px; border: 2px solid black">
+                            <img class="thumbnail" style="width:304; height:280; padding: 20px;" src="{% static 'images/15.jpg' %}">
+                            <div class="box-element product">
+                                <h4 style="text-align: center; color:#435693;"><strong>Lord Krishna</strong></h4>
+                                <hr>
+                                
+                                <button  style="color: white; background-color: #435693;   width: 130px; height: 30px;"><b>Add to Cart</b></button>
+                                
+                                <h6 style="display: inline-block; float: right; padding: 10px"><strong>₹3,00,000</strong></h6>
+                                
+                            </div>
+                        </div>
+                
+                        <div class="col-sm-4" style="box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); gap: 8px; margin: 5px; width: 32%; border-radius:20px; border: 2px solid black">
+                            <img class="thumbnail" style="width:304; height:280; padding: 20px;" src="{% static 'images/16.jpeg' %}">
+                            <div class="box-element product">
+                                <h4 style="text-align: center; color:#8f4f9e;"><strong>African People</strong></h4>
+                                <hr>
+                
+                                <button  style="color: white; background-color: #8f4f9e; width: 130px; height: 30px;"><b>Add to Cart</b></button>
+                                
+                                <h6 style="display: inline-block; float: right"><strong>₹2,34,000</strong></h6>
+                
+                            </div>
+                        </div>
+                    </div>
+
+                    <br>
+            <h2 style="font-weight: bold; color: black; text-align: center; margin-top: 20px; margin-bottom: -20px;"> Mandala Art  </h2>
+            <br>
+            <br>
+            <br>
+            <div class="row" style="padding: 20px;">
+                <div class="sm1 col-sm-4" style="box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); gap: 8px; margin: 5px; width: 32%; border-radius:20px; border: 2px solid black">
+                    <img class="thumbnail" style="width:304; height:280; padding: 20px;" src="{% static 'images/17.jpg' %}">
+                    <div class="box-element product">
+                        <h4 style="text-align: center; color: #8f4f9e;"><strong >indian style mandala art</strong></h4>
+                        <hr>
+        
+                        <button  style="color: white; background-color: #8f4f9e;  width: 130px; height: 30px;"><b>Add to Cart</b></button>
+                        
+                        <h6 style="display: inline-block; float: right"><strong>₹2,00,316</strong></h6>
+        
+                    </div>
+                </div>
+        
+                <div class="col-sm-4" style="box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); gap: 8px; margin: 5px; width: 32%; border-radius:20px; border: 2px solid black">
+                    <img class="thumbnail" style="width:304; height:280; padding: 20px;" src="{% static 'images/18.jpg' %}">
+                    <div class="box-element product">
+                        <h4 style="text-align: center; color:#228168;"><strong>mandala art:- village woman</strong></h4>
+                        <hr>
+                        
+                        <button  style="color: white; background-color: #228168;   width: 130px; height: 30px;"><b>Add to Cart</b></button>
+                        
+                        <h6 style="display: inline-block; float: right; padding: 10px"><strong>₹3,00,000</strong></h6>
+                        
+                    </div>
+                </div>
+        
+                <div class="col-sm-4" style="box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); gap: 8px; margin: 5px; width: 32%; border-radius:20px; border: 2px solid black">
+                    <img class="thumbnail" style="width:304; height:280; padding: 20px;" src="{% static 'images/19.jpg' %}">
+                    <div class="box-element product">
+                        <h4 style="text-align: center; color:#435693;"><strong>Dot mandala art on canvas</strong></h4>
+                        <hr>
+        
+                        <button  style="color: white; background-color: #435693;  width: 130px; height: 30px;"><b>Add to Cart</b></button>
+                        
+                        <h6 style="display: inline-block; float: right"><strong>₹2,34,000</strong></h6>
+        
+                    </div>
+                </div>
+            </div>
+
+
+            
+              <br>
+              <br>
+              <h2 style="font-weight: bold; color: black;margin-left: 65px; text-align: center;"> Tavdi painting  </h2>
+              <br>
+              <div class="row" style="padding: 20px;">
+                <div class="sm1 col-sm-4" style="box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); gap: 8px; margin: 5px; width: 32%; border-radius:20px; border: 2px solid black">
+                    <img class="thumbnail" style="width:304; height:280; padding: 20px;" src="{% static 'images/20.webp' %}">
+                    <div class="box-element product">
+                        <h4 style="text-align: center; color: #435693;"><strong >tavdi art:- Radha Krishna</strong></h4>
+                        <hr>
+        
+                        <button  style="color: white; background-color: #435693;  width: 130px; height: 30px;"><b>Add to Cart</b></button>
+                        
+                        <h6 style="display: inline-block; float: right"><strong>₹2,00,316</strong></h6>
+        
+                    </div>
+                </div>
+        
+                <div class="col-sm-4" style="box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); gap: 8px; margin: 5px; width: 32%; border-radius:20px; border: 2px solid black">
+                    <img class="thumbnail" style="width:304; height:280; padding: 20px;" src="{% static 'images/21.jpg' %}">
+                    <div class="box-element product">
+                        <h4 style="text-align: center; color:#8f4f9e;"><strong>tavdi art:- Ganeshji</strong></h4>
+                        <hr>
+                        
+                        <button  style="color: white; background-color: #8f4f9e;   width: 130px; height: 30px;"><b>Add to Cart</b></button>
+                        
+                        <h6 style="display: inline-block; float: right; padding: 10px"><strong>₹3,00,000</strong></h6>
+                        
+                    </div>
+                </div>
+        
+                <div class="col-sm-4" style="box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); gap: 8px; margin: 5px; width: 32%; border-radius:20px; border: 2px solid black">
+                    <img class="thumbnail" style="width:304; height:280; padding: 20px;" src="{% static 'images/22.jpeg' %}">
+                    <div class="box-element product">
+                        <h4 style="text-align: center; color:#228168;"><strong>Lady Tavdi art</strong></h4>
+                        <hr>
+        
+                        <button  style="color: white; background-color: #228168;  width: 130px; height: 30px;"><b>Add to Cart</b></button>
+                        
+                        <h6 style="display: inline-block; float: right"><strong>₹2,34,000</strong></h6>
+        
+                    </div>
+                </div>
+            </div>
+
+
+              <br>
+              <br>
+              <h2 style="font-weight: bold; color: black;margin-left: 65px;text-align: center;"> Abstract art  </h2>
+              <br> 
+              <div class="row" style="padding: 20px;">
+                <div class="sm1 col-sm-4" style="box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); gap: 8px; margin: 5px; width: 32%; border-radius:20px; border: 2px solid black">
+                    <img class="thumbnail" style="width:304; height:280; padding: 20px;" src="{% static 'images/2.jpg' %}">
+                    <div class="box-element product">
+                        <h4 style="text-align: center; color: #228168;"><strong >Abstract art</strong></h4>
+                        <hr>
+        
+                        <button  style="color: white; background-color: #228168;  width: 130px; height: 30px;"><b>Add to Cart</b></button>
+                        
+                        <h6 style="display: inline-block; float: right"><strong>₹2,00,316</strong></h6>
+        
+                    </div>
+                </div>
+        
+                <div class="col-sm-4" style="box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); gap: 8px; margin: 5px; width: 32%; border-radius:20px; border: 2px solid black">
+                    <img class="thumbnail" style="width:304; height:280; padding: 20px;" src="{% static 'images/1.jpg' %}">
+                    <div class="box-element product">
+                        <h4 style="text-align: center; color:#435693;"><strong>Abstract art:- egret</strong></h4>
+                        <hr>
+                        
+                        <button  style="color: white; background-color: #435693;   width: 130px; height: 30px;"><b>Add to Cart</b></button>
+                        
+                        <h6 style="display: inline-block; float: right; padding: 10px"><strong>₹3,00,000</strong></h6>
+                        
+                    </div>
+                </div>
+        
+                <div class="col-sm-4" style="box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); gap: 8px; margin: 5px; width: 32%; border-radius:20px; border: 2px solid black">
+                    <img class="thumbnail" style="width:304; height:280; padding: 20px;" src="{% static 'images/3.jpg' %}">
+                    <div class="box-element product">
+                        <h4 style="text-align: center; color:#8f4f9e;"><strong>Abstract art:- Lord Shiva</strong></h4>
+                        <hr>
+        
+                        <button  style="color: white; background-color: #8f4f9e; width: 130px; height: 30px;"><b>Add to Cart</b></button>
+                        
+                        <h6 style="display: inline-block; float: right"><strong>₹2,34,000</strong></h6>
+        
+                    </div>
+                </div>
+            </div>
+
+              
+              
+              <br>
+              <br>
+              <h1 style="font-weight: bold; color: black;margin-left: 65px; text-align: center;"> Events  </h1>
+              <br> 
+              <h2 style="font-weight: 5px; color: black;margin-left: 65px;text-align: center;"> Current Events </h2>
+              <br>
+              <table class="table table-striped">
+               <tr>
+                <td><img src="{% static 'images/23.webp' %}" style="height: 80px;width: 150px;"></td>
+                <td style="font-size: 16px;">100 Warhols: An Artsy Exclusive from Revolver Gallery’s Collection</td>
+                <td style="font-size: 16px;">February 15 – March 15, 2024</td>
+                </tr>
+                <tr>
+                    <td><img src="{% static 'images/24.webp' %}" style="height: 80px;width: 150px;"></td>
+                <td style="font-size: 16px;">LA Art Show 2024</td>
+                <td style="font-size: 16px;">February 8 – March 8, 2024</td>
+                </tr>
+                <tr>
+                    <td><img src="{% static 'images/25.webp' %}" style="height: 80px;width: 150px;"></td>
+                <td style="font-size: 16px;">S.E.A. Focus 2024</td>
+                <td style="font-size: 16px;">January 19 – February 18, 2024</td>
+                </tr>    
+                <tr>
+                    <td><img src="{% static 'images/26.webp' %}" style="height: 80px;width: 150px;"></td>
+                <td style="font-size: 16px;">Art Palm Beach 2024</td>
+                <td style="font-size: 16px;">January 18 – February 18, 2024</td>
+                </tr>  
+                </table>
+
+                <br> 
+              <h1 style="font-weight: 5px; color: black;margin-left: 65px; text-align: center;"> Past Events </h1>
+              <br>
+              <table class="table table-striped">
+               <tr>
+                <td><img src="{% static 'images/27.webp' %}" style="height: 80px;width: 150px;"></td>
+                <td style="font-size: 16px;">The Art Show 2023</td>
+                <td style="font-size: 16px;">November 2 – 30, 2023</td>
+                </tr>
+                <tr>
+                    <td><img src="{% static 'images/28.webp' %}" style="height: 80px;width: 150px;"></td>
+                <td style="font-size: 16px;">London Art Fair 2024</td>
+                <td style="font-size: 16px;">January 11 – February 5, 2024</td>
+                </tr>
+                <tr>
+                    <td><img src="{% static 'images/29.webp' %}" style="height: 80px;width: 150px;"></td>
+                <td style="font-size: 16px;">AKAA 2023</td>
+                <td style="font-size: 16px;">October 17 – 27, 2023</td>
+                </tr>    
+                
+                </table>
+
+                <br> 
+              <h1 style="font-weight: 5px; color: black;margin-left: 65px; text-align: center;"> Upcoming Events </h1>
+              <br>
+              <table class="table table-striped">
+               <tr>
+                <td><img src="{% static 'images/30.webp' %}" style="height: 80px;width: 150px;"></td>
+                <td style="font-size: 16px;">art KARLSRUHE</td>
+                <td style="font-size: 16px;">February 21 – March 2, 2024</td>
+                </tr>
+                <tr>
+                    <td><img src="{% static 'images/31.webp' %}" style="height: 80px;width: 150px;"></td>
+                <td style="font-size: 16px;">UVNT Art Fair Madrid</td>
+                <td style="font-size: 16px;">March 7 – 10, 2024</td>
+                </tr>
+                </table>
+                <br>
+                <br>
+
+            <footer>
+                <div class="footerContainer">
+                    <div class="row">
+                        <div class="col-5">
+                            <h1 style="color: #6b8ce4;text-indent: 10px; margin-left: 5px;">Contact us</h1>
+                            <br>
+                            <ul>
+                                <li style="color: #c7cbd9;">Address:- 203A,sky Residency,Ahmedabad</li>
+                                <br>
+                                <li style="color: #c7cbd9;">Email:- hensi2008@gmail.com</li>
+                                <br>
+                                <li style="color: #c7cbd9;">Phone no.:- (+91)2345671564</li>
+                            </ul>
+                        </div>
+                        <div class="col-3">
+                            <br>
+                            <h4 style="color: #429cec;text-indent: 10px;">Types of painting</h4>
+                            <ul>
+                                <br>
+                                <li style="color: #c7cbd9;">Acrylic painting</li>
+                                <li style="color: #c7cbd9;">Mandala art</li>
+                                <li style="color: #c7cbd9;">Tavdi art</li>
+                                <li style="color: #c7cbd9;">Abstract painting</li>
+                            </ul>
+                        </div>
+                        <div class="col-3">
+                            <br>
+                            <h4 style="color: #33c6ef;text-indent: 10px;">Events</h4>
+                            <ul>
+                                <br>
+                                <li style="color: #c7cbd9;">Past</li>
+                                <li style="color: #c7cbd9;">Current</li>
+                                <li style="color: #c7cbd9;">Upcoming</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </footer>
+            <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+
+        {% comment %} </div> 
+    </div> {% endcomment %}
+    
+    </body>
+</html>
+    

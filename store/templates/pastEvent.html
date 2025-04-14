@@ -1,0 +1,176 @@
+{% load static %}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/pastEvent.css' %}">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+        <script type="text/javascript">
+            var user = '{{request.user}}'
+
+            function getToken(name) {
+				var cookieValue = null;
+				if (document.cookie && document.cookie !== '') {
+					var cookies = document.cookie.split(';');
+					for (var i = 0; i < cookies.length; i++) {
+						var cookie = cookies[i].trim();
+						// Does this cookie string begin with the name we want?
+						if (cookie.substring(0, name.length + 1) === (name + '=')) {
+							cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+							break;
+						}
+					}
+				}
+				return cookieValue;
+			}
+			var csrftoken = getToken('csrftoken')
+	
+			function getCookie(name) {
+				// Split cookie string and get all individual name=value pairs in an array
+				var cookieArr = document.cookie.split(";");
+	
+				// Loop through the array elements
+				for(var i = 0; i < cookieArr.length; i++) {
+					var cookiePair = cookieArr[i].split("=");
+	
+					/* Removing whitespace at the beginning of the cookie name
+					and compare it with the given string */
+					if(name == cookiePair[0].trim()) {
+						// Decode the cookie value and return
+						return decodeURIComponent(cookiePair[1]);
+					}
+				}
+	
+				// Return null if not found
+				return null;
+			}
+			var cart = JSON.parse(getCookie('cart'))
+			if(cart == undefined){
+				cart = {}
+				console.log('Cart was created!')
+				document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
+			}
+			console.log('Cart:', cart)
+            
+    </script>
+    </head>
+    <body>
+        <ul class="nav justify-content-center" style="background-color: rgb(209, 153, 153); "> 
+            <img src="{% static 'images/4.jpg' %}" id="abc1" style=" margin-left: -405px">
+            <p id="abc2" style="margin-left: -10px">Artful Harbor</p>
+            <li class="nav-item "> 
+                <a id="q1" class="nav-link "  href="{% url 'art_FSD' %}" style="color: rgb(159, 9, 9); font-weight: bold; margin-left: -375px; margin-right: 60px;font-size: 15px">Home</a> 
+            </li> 
+            <li class="nav-item "> 
+                <a id="q2" class="nav-link "   href="{% url 'artist' %}" style="color: rgb(186, 41, 41); font-weight: bold; margin-left: -319px; margin-right: 50px;font-size: 15px">Artist</a> 
+            </li> 
+            <li class="nav-item "> 
+                <a id="q3" class="nav-link "   href="{% url 'artwork' %}" style="color: rgb(111, 33, 33); font-weight: bold; margin-left: -267px; margin-right: 50px;font-size: 15px">Artworks</a> 
+            </li> 
+            <li class="nav-item "> 
+                <a id="q4" class="nav-link "   href="{% url 'store' %}" style="color: rgba(198, 62, 62, 0.822); font-weight: bold; margin-left: -190px; margin-right: 30px;font-size: 15px">Store</a> 
+            </li> 
+            
+            <li class="nav-item  dropdown "> 
+                <a id="q5" class="nav-link active dropdown-toggle"  data-bs-toggle="dropdown"  href="#Events" style="color: #a94249; font-weight: bold; margin-left: -140px; margin-right: 30px;font-size: 15px">Events</a> 
+                <ul class="dropdown-menu"> 
+                    <li>
+                        <a class="dropdown-item"  href="{% url 'pastEvent' %}">past</a>
+                    </li> 
+                    <li>
+                        <a class="dropdown-item"  href="{% url 'currentEvent' %}">current</a>
+                    </li> 
+                    <li>
+                        <a class="dropdown-item"  href="{% url 'upcomingEvent' %}">upcoming</a>
+                    </li> 
+                </ul>
+            </li> 
+            <li class="nav-item "> 
+                <a id="q6" class="nav-link "  href="{% url 'contact' %}" style="color: rgb(111, 55, 55); font-weight: bold; margin-left: -70px; margin-right: 20px;font-size: 15px">Contact</a> 
+            </li> 
+
+            <li class="form-inline my-2 my-lg-0">
+                {% if user.is_authenticated %}
+                    <h5 style="margin-top: 4px; margin-right: -250px; margin-left: 130px; font-weight: bold; color: rgb(103, 63, 63);"><img id="v98"  src="{% static 'images/profile.webp' %}" /> {{ user.username }}</h5>
+                    <a href="{% url 'logout' %}"class="btn " style="margin-top: -28px; margin-right: -310px; margin-left: 230px; background-color: rgb(103, 63, 63); font-weight: bold; color: white;">Logout</a>
+                    <a href="{% url 'cart' %}">
+                        <img  id="cart-icon1" src="{% static 'images/cart.png' %}">
+                    </a>
+                   
+                   <p id="cart-total1" >{{cartItems}}</p>
+                {% else %}
+                <a href="{% url 'login' %}"class="btn " style="margin-top: 4px; margin-right: -270px; margin-left: 170px; font-weight: bold; color: white; background-color: rgb(103, 63, 63);">Login</a>
+                <a href="{% url 'signup' %}"class="btn " style="margin-top: 4px; margin-right: -350px; margin-left: 280px; background-color: rgb(137, 90, 90); font-weight: bold; color: white;">Signup</a>
+                <a href="{% url 'cart' %}">
+                    <img  id="cart-icon" src="{% static 'images/cart.png' %}">
+                </a>
+               
+               <p id="cart-total" >{{cartItems}}</p>
+                {% endif %}
+                
+   
+            </li>
+        </ul>
+
+        <br>
+        <div class="container-fluid" style="height: 75%; width: 100%; position: relative;">
+        <img src="{% static 'images/36.jpg' %}" style="height: 80%; width: 100%;">
+        </div>
+        <div class="container1">     
+            <img src="{% static 'images/27.webp' %}" class="image1">
+            <h1 style="font-size: 30px; margin-top: 5px; margin-left: 170px;  text-align: justify; transition: 0.2s; " >The Art Show 2023</h1>
+            <h3 style="font-size: 25px; margin-top: 18px;margin-left: 170px; text-align: justify; ">(November 2 – 30, 2023)</h3>
+        </div>  
+        <br>
+        <br>
+        
+        <ul style="background-color: rgb(239, 233, 233); border-radius: 20px; margin-left: 10px; margin-right: 10px;  overflow: hidden;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);">
+            <li><p style="text-align: justify; margin-right: 20px;">Organized annually by the Art Dealers Association of America, and benefitting Henry Street Settlement, one of New York’s leading social service, arts, and health care organizations, The Art Show brings together the country’s top galleries to showcase incisively curated exhibitions of both historical and contemporary works.</p></li>
+            <li><p style="text-align: justify; margin-right: 20px;">The fair's intimately scaled presentations foster new relationships, active conversations with gallerists, and close looking at works by artists representing a variety of genres, practices, and national and international origins. With a history of programming that ranges from artist performances to dynamic keynote presentations, The Art Show provides its audience with a wide scope of cultural experiences, meaningful interactions, and illuminating exposure to phenomenal artwork.</p></li>
+            <li><p style="text-align: justify; margin-right: 20px;">The Art Show Benefit Preview offers an exclusive first look before the fair opens to the public, convening the worlds of art and philanthropy for this highly anticipated, glamorous gathering. The Benefit Preview is attended by a global audience of collectors and philanthropic and business leaders, whose generosity directly supports Henry Street Settlement's life-changing programs.</p></li>
+            <li><p style="text-align: justify; margin-right: 20px;">As Henry Street Settlement’s greatest source of unrestricted funding, The Art Show has raised over $36 million for the nonprofit through more than three decades of partnership between the two organizations. The collaboration between the ADAA and Henry Street allows for the creation of an unparalleled art experience that supports vital services for over 50,000 New Yorkers each year.</p></li>
+        </ul>
+        <br>
+        <div class="container-fluid" style="height: 75%; width: 100%; position: relative;">
+        <img src="{% static 'images/37.jpg' %}" style="height: 80%; width: 100%;">
+        </div>
+        <div class="container2">     
+            <img src="{% static 'images/28.webp' %}" class="image2">
+            <h1 style="font-size: 30px; margin-top: 5px; margin-left: 170px;  text-align: justify; transition: 0.2s; " >London Art Fair 2024</h1>
+            <h3 style="font-size: 25px; margin-top: 18px;margin-left: 170px; text-align: justify; ">(January 11 – February 5, 2024)</h3>
+        </div>  
+        <br>
+        <br>
+        
+        <ul style="background-color: rgb(239, 233, 233); border-radius: 20px; margin-left: 10px; margin-right: 10px;  overflow: hidden;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);">
+            <li><p style="text-align: justify; margin-right: 20px;">The international art calendar for 2024 has launched with the opening of the London Art Fair, founded in 1989 by London’s Business Design Centre in Islington.</p></li>
+            <li><p style="text-align: justify; margin-right: 20px;">Bringing together over 120 galleries this January, London Art Fair provides an established home for Modern British Art, whilst embracing an increasingly international and contemporary outlook, with new galleries from around the world. Curated sections including Platform and Photo50 offer thematic presentations around a new theme each year, while Encounters showcases the freshest contemporary art from across the globe featuring young, up and coming galleries eager to present their emerging artists alongside established names who are creating new and exciting work in a different direction.</p></li>
+            <li><p style="text-align: justify; margin-right: 20px;">For 2024 London Art Fair's prestigious Museum Partner pavilion will be occupied by Charleston, the former home of the Bloomsbury group, which now encompasses two contemporary gallery spaces in Lewes and Firle.</p></li>
+            
+            
+        </ul>
+        <br>
+        <div class="container-fluid" style="height: 75%; width: 100%; position: relative;">
+        <img src="{% static 'images/38.jpg' %}" style="height: 80%; width: 100%; border: 5px solid black;">
+        </div>
+        <div class="container3">     
+            <img src="{% static 'images/29.webp' %}" class="image3">
+            <h1 style="font-size: 30px; margin-top: 5px; margin-left: 170px;  text-align: justify; transition: 0.2s; " >AKAA 2023</h1>
+            <h3 style="font-size: 25px; margin-top: 18px;margin-left: 170px; text-align: justify; ">(October 17 – 27, 2023)</h3>
+        </div>  
+        <br>
+        <br>
+        
+        <ul style="background-color:  rgb(239, 233, 233); border-radius: 20px; margin-left: 10px; margin-right: 10px;  overflow: hidden;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);">
+            <li><p style="text-align: justify; margin-right: 20px;">From October 17 to 27, 2023, Paris will host AKAA, the epitome of contemporary African art – Also Known As Africa. Now, in its eighth edition, it celebrates curatorial innovation and the diverse narratives that shape modern Africa. At AKAA 2023, the spotlight falls on curatorial practice within the art market. Curators and artists will unveil thought-provoking projects, installations, and critical pieces that challenge existing norms. They delve deep into the nuances of curatorial practices, opening windows into the artist’s mind while exploring varied exhibition spaces.</p></li>
+            <li><p style="text-align: justify; margin-right: 20px;">AKAA - Also Known As Africa - France’s first and leading contemporary art fair centered on African art scenes, stands for a multi-faceted Africa, which transcends borders and whose voices resonate in the four corners of the world, carried by the vision of each artist.</p></li>
+            <li><p style="text-align: justify; margin-right: 20px;">AKAA 2023 is not just an art fair; it’s a journey through the minds of exceptional artists and curators. As the days unfold, attendees will immerse themselves in a world where every brushstroke tells a story. Additionally, they will be treated to unique artworks and installations that spark a conversation. Don’t miss this opportunity to witness the convergence of talent, innovation, and creativity. AKAA 2023 promises an unforgettable experience, inviting you to explore the intricate tapestry of African artistry shaped by visionary curators and exceptional artists.</p></li>
+        </ul>
+
+        <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+        <br>
+        
+    </body>
+</html>
